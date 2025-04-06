@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    {{ content_for_header }}
+    {{ 'winter-look.css' | asset_url | stylesheet_tag }}
+  </head>
+  <body>
+    {{ content_for_layout }}
+    {{ 'winter-look.js' | asset_url | script_tag }}
+  </body>
+</html>

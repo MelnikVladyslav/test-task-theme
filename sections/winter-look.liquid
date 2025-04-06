@@ -1,0 +1,163 @@
+{{ 'winter-look.css' | asset_url | stylesheet_tag }}
+{{ 'winter-look.js' | asset_url | defer | script_tag }}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<div class="winter-look">
+  <div class="header">
+    <div class="logo">
+      {% if section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | img_url: 'master' }}" alt="{{ shop.name }}">
+      {% endif %}
+    </div>
+    <div class="cart-status">
+      <span class="products-selected">
+        <span class="selected-count">0</span> OF {{ section.blocks.size }} PRODUCTS SELECTED
+      </span>
+      <button class="btn-checkout" disabled>{{ section.settings.checkout_button_text }}</button>
+    </div>
+  </div>
+
+  <section class="hero" style="background-image: url({{ section.settings.hero_background | img_url: 'master' }})">
+    <div class="hero-content">
+      <h1>{{ section.settings.hero_title }}</h1>
+      <p>{{ section.settings.hero_subtitle }}</p>
+      <button class="btn-start">{{ section.settings.start_button_text }}</button>
+    </div>
+  </section>
+
+  <div class="builder">
+    {% for block in section.blocks %}
+      {% assign products = block.settings.products %}
+      <section class="products-section {% if forloop.first %}active{% endif %}" 
+              id="step-{{ forloop.index }}"
+              style="background-image: url({{ block.settings.background | img_url: 'master' }})"
+              {{ block.shopify_attributes }}>
+        <div class="section-content">
+          <h2>{{ block.settings.title }}</h2>
+          <p class="subtitle">{{ block.settings.subtitle }}</p>
+          
+          <div class="products-grid">
+            {% for product in products %}
+              <div class="product-card">
+                <div class="product-image">
+                  <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+                </div>
+                <h3>{{ product.title }}</h3>
+                <p class="price">{{ product.price | money }}</p>
+                <button class="btn-select" 
+                        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                        data-product-id="{{ product.id }}">
+                  SELECT
+                </button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Winter Look Builder",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_background",
+      "label": "Hero Background Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "CREATE YOUR OWN WINTER LOOK"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "default": "CHOOSE ONE PRODUCT IN EACH SECTION AND GET 20% ON THE WHOLE BUNDLE"
+    },
+    {
+      "type": "text",
+      "id": "start_button_text",
+      "label": "Start Button Text",
+      "default": "START"
+    },
+    {
+      "type": "text",
+      "id": "checkout_button_text",
+      "label": "Checkout Button Text",
+      "default": "CHECKOUT"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Builder Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step Title",
+          "default": "SELECT PRODUCT"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Step Subtitle",
+          "default": "Choose one product from this category"
+        },
+        {
+          "type": "image_picker",
+          "id": "background",
+          "label": "Step Background"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Products",
+          "limit": 3
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Winter Look Builder",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "SELECT SNOWBOARD",
+            "subtitle": "Choose your perfect board"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "SELECT JACKET",
+            "subtitle": "Pick your style"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "SELECT HELMET",
+            "subtitle": "Stay safe with style"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

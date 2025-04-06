@@ -1,0 +1,9 @@
+development:
+  password: [medree]
+  theme_id: "live"
+  store: test-shop-2025-04.myshopify.com
+
+production:
+  password: [medree]
+  theme_id: "live"
+  store: test-shop-2025-04.myshopify.com
